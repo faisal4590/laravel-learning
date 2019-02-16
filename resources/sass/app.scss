@@ -17,3 +17,8 @@ $fa-font-path: "../webfonts";
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
+.router-link-exact-active {
+    // router e jokhn click korbo(dashboard, profile) tokhn je style hobe ogula define korci
+    background: #3f51b5;
+    color: white !important;
+}

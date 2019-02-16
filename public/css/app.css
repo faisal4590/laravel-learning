@@ -18809,6 +18809,34 @@ readers do not read off random characters that represent icons */
   font-family: "Font Awesome 5 Brands";
 }
 
+.icon-blue {
+  color: #9561e2;
+}
+
+.icon-pink {
+  color: #f66d9b;
+}
+
+.icon-orange {
+  color: #f6993f;
+}
+
+.icon-green {
+  color: #38c172;
+}
+
+.icon-red {
+  color: #e3342f;
+}
+
+.icon-blue {
+  color: #3490dc;
+}
+
+.icon-indigo {
+  color: #6574cd;
+}
+
 /*!
  * Bootstrap v4.3.1 (https://getbootstrap.com/)
  * Copyright 2011-2019 The Bootstrap Authors
@@ -18820,7 +18848,7 @@ readers do not read off random characters that represent icons */
   --blue: #3490dc;
   --indigo: #6574cd;
   --purple: #9561e2;
-  --pink: #f66D9b;
+  --pink: #f66d9b;
   --red: #e3342f;
   --orange: #f6993f;
   --yellow: #ffed4a;
@@ -19349,7 +19377,7 @@ mark,
 
 code {
   font-size: 87.5%;
-  color: #f66D9b;
+  color: #f66d9b;
   word-break: break-word;
 }
 
@@ -29467,5 +29495,10 @@ a.text-dark:focus {
 .navbar-laravel {
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.router-link-exact-active {
+  background: #3f51b5;
+  color: white !important;
 }
 

@@ -7,6 +7,39 @@
 require("./bootstrap");
 
 window.Vue = require("vue");
+import { Form, HasError, AlertError } from "vform";
+
+//defining global component that can be used in any components for form validation starts
+window.Form = Form;
+Vue.component(HasError.name, HasError);
+Vue.component(AlertError.name, AlertError);
+//defining global component that can be used in any components for form validation ends
+
+import VueRouter from "vue-router";
+
+Vue.use(VueRouter);
+
+//creating routes
+let routes = [
+    {
+        path: "/dashboard",
+        component: require("./components/DashboardComponent.vue").default
+    },
+    {
+        path: "/profile",
+        component: require("./components/ProfileComponent.vue").default
+    },
+    {
+        path: "/users",
+        component: require("./components/UsersComponent.vue").default
+    }
+];
+
+const router = new VueRouter({
+    mode: "history", ///localhost/home/profile evabe home hoye na giy just localhost/profile e jate jai sejonno history use korlam
+    routes // short for `routes: routes`
+    //routes gulake instantiate korlam
+});
 
 /**
  * The following block of code may be used to automatically register your
@@ -31,5 +64,6 @@ Vue.component(
  */
 
 const app = new Vue({
-    el: "#app"
+    el: "#app",
+    router
 });

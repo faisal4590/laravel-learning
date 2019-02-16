@@ -17,8 +17,11 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('type')->default('user');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->mediumText('bio')->nullable();//user empty rekhe dite pare bio
+            $table->string('photo')->default('profile.jpg');//user empty rekhe dite pare bio
             $table->rememberToken();
             $table->timestamps();
         });
