@@ -8,6 +8,22 @@ require("./bootstrap");
 
 window.Vue = require("vue");
 import { Form, HasError, AlertError } from "vform";
+import moment from "moment"; //package.json file e moment dependency ace okhane check kortece
+
+//importing sweet alert.js starts
+import Swal from "sweetalert2";
+window.Swal = Swal;
+
+const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000
+});
+
+window.Toast = Toast; //globally toaster define korci jeno jekono component e use krte pari
+
+//defining sweetalert2 ends
 
 //defining global component that can be used in any components for form validation starts
 window.Form = Form;
@@ -18,6 +34,26 @@ Vue.component(AlertError.name, AlertError);
 import VueRouter from "vue-router";
 
 Vue.use(VueRouter);
+
+//using vue progress bar starts
+import VueProgressBar from "vue-progressbar";
+const options = {
+    color: "#bffaf3",
+    failedColor: "#874b4b",
+    thickness: "5px",
+    transition: {
+        speed: "0.2s",
+        opacity: "0.6s",
+        termination: 300
+    },
+    autoRevert: true,
+    location: "top",
+    inverse: false
+};
+
+Vue.use(VueProgressBar, options);
+
+//using vue progress bar ends
 
 //creating routes
 let routes = [
@@ -56,6 +92,19 @@ Vue.component(
     "example-component",
     require("./components/ExampleComponent.vue").default
 );
+
+//defining global filter jeta jekono component e use korte parbo.. starts
+Vue.filter("upperCaseAnyText", function(textArgument) {
+    return textArgument.charAt(0).toUpperCase() + textArgument.slice(1);
+    //ei filter ta jekono text er 1st letter ke uppercase kore return korbe.
+    //as eta global filter hishebe define korci(As app.js e likhci), so jekono vue component e ei filter call korte parbo ekhn.
+});
+
+Vue.filter("parseCreatedAtDateForUser", function(createdAt) {
+    return moment(createdAt).format("MMMM Do YYYY, h:mm:ss a"); //moment.js use korlam.
+});
+
+//global filter definition ends
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
