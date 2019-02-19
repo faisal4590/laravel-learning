@@ -12,7 +12,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 <!-- CSRF Token -->
 <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>AdminLTE 3 | Starter</title>
+  <title>Lara prac</title>
 <link rel="stylesheet" href="/css/app.css">
 </head>
 <body class="hold-transition sidebar-mini">
@@ -58,7 +58,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="./img/mine.jpg" class="img-circle elevation-2" alt="User Image">
+          <img src="img/profile/{{Auth::user()->photo}}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
           <a href="#" class="d-block">
@@ -113,6 +113,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <i class="nav-icon fa fa-user icon-green"></i>
               <p>
                 Profile
+              </p>
+            </router-link>
+          </li>
+
+          <li class="nav-item">
+            <router-link to="/developer" class="nav-link">
+              <i class="nav-icon fas fa-cogs icon-indigo"></i>
+              <p>
+                Developer
               </p>
             </router-link>
           </li>

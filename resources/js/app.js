@@ -25,6 +25,13 @@ window.Toast = Toast; //globally toaster define korci jeno jekono component e us
 
 //defining sweetalert2 ends
 
+//Using custom events using vue js starts
+
+let Fire = new Vue(); //fire name e vue er 1ta instance create korlam
+window.Fire = Fire; //globally define korlam jate jekono component e use korte pari.
+
+//Using custom events using vue js ends
+
 //defining global component that can be used in any components for form validation starts
 window.Form = Form;
 Vue.component(HasError.name, HasError);
@@ -64,6 +71,10 @@ let routes = [
     {
         path: "/profile",
         component: require("./components/ProfileComponent.vue").default
+    },
+    {
+        path: "/developer",
+        component: require("./components/DeveloperComponent.vue").default
     },
     {
         path: "/users",
@@ -111,6 +122,24 @@ Vue.filter("parseCreatedAtDateForUser", function(createdAt) {
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+
+//adding passport component(just copy paste korlam) starts
+
+Vue.component(
+    "passport-clients",
+    require("./components/passport/Clients.vue").default
+);
+
+Vue.component(
+    "passport-authorized-clients",
+    require("./components/passport/AuthorizedClients.vue").default
+);
+
+Vue.component(
+    "passport-personal-access-tokens",
+    require("./components/passport/PersonalAccessTokens.vue").default
+);
+//adding passport component(just copy paste korlam) ends
 
 const app = new Vue({
     el: "#app",

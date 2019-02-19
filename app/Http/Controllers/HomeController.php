@@ -20,6 +20,8 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        //constructor e auth middleware diye dicci tar mane user authenticated hote hobe first e.
+        //ei line ta kete dile localhost/home e login charai access korte partam.
     }
     /**
      * Show the application dashboard to the user.
@@ -28,7 +30,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-
         return view('home');
     }
 }

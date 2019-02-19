@@ -6,7 +6,7 @@
           <div class="card-header">
             <h3 class="card-title">Users</h3>
             <div class="card-tools">
-              <button class="btn btn-success" data-toggle="modal" data-target="#addNewUserModal">
+              <button class="btn btn-success" @click="addUserModal">
                 <i class="fas fa-user-plus"></i>
                 Add new
               </button>
@@ -31,11 +31,11 @@
                     <td>{{userVariable.created_at | parseCreatedAtDateForUser}}</td>
 
                     <td>
-                      <a href="#">
+                      <a href="#" @click="updateUserModal(userVariable)">
                         <i class="fa fa-edit icon-indigo"></i>
                       </a>
                       /
-                      <a href="#">
+                      <a href="#" @click="deleteUser(userVariable.id)">
                         <i class="fa fa-trash icon-red"></i>
                       </a>
                     </td>
@@ -62,13 +62,17 @@
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Add new user</h5>
+            <h5 v-show="!editMode" class="modal-title" id="exampleModalLabel">Add new user</h5>
+            <!-- if editMode==false, then Add new user korabo form e. -->
+            <h5 v-show="editMode" class="modal-title" id="exampleModalLabel">Update user</h5>
+            <!-- if editMode==true, then Update new user show korabo form e. -->
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
 
-          <form @submit.prevent="createUser">
+          <form @submit.prevent="editMode ? updateUser() : createUser()">
+            <!-- Jodi edit mode true hoy(niche script e data te define korci) then edit modal show korabo, ow createUserModal show korabo -->
             <!-- form submit korle page jate reload na hoy ejonno prevent use korlam
             createUser() method ta niche script e define kora ace-->
             <div class="modal-body">
@@ -145,8 +149,13 @@
               <button type="button" class="btn btn-danger" data-dismiss="modal">
                 <i class="fas fa-times-circle fa-fw"></i>Close
               </button>
-              <button type="submit" class="btn btn-primary">
+              <button v-show="!editMode" type="submit" class="btn btn-success">
+                <!-- if editMode==false, then Create button show korabo form e. -->
                 <i class="fas fa-check-circle fa-fw"></i>Create
+              </button>
+              <button v-show="editMode" type="submit" class="btn btn-primary">
+                <!-- if editMode==true, then Update button show korabo form e. -->
+                <i class="fas fa-check-circle fa-fw"></i>Update
               </button>
             </div>
           </form>
@@ -160,8 +169,10 @@
 export default {
   data() {
     return {
+      editMode: false,
       usersObj: {}, //ei object e users er data tule ene store korbo
       form: new Form({
+        id: "",
         name: "",
         email: "",
         password: "",
@@ -178,28 +189,115 @@ export default {
       //user api theke sob data tule ene then data gulake userObj object e store korlam
       //get request dile automatic API/UserController.php er index() method ke call korbe. Okhan theke data return koracci
     },
+    deleteUser(id) {
+      //delete korar age 1ta confirmation message dewa lagbe
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then(result => {
+        //Delete button e confirm howar por press korle nicher code execute korbo
+
+        //send http request to server.
+        //API/UserController.php file e destroy() method use kore delete korbo data
+
+        if (result.value) {
+          //vform use korlam. delete() call korle ota UserController.php er destroy() method ke refer korbe.
+          this.form
+            .delete("api/users/" + id)
+            .then(() => {
+              Swal.fire("Deleted!", "Your file has been deleted.", "success");
+
+              Fire.$emit("loadData"); //1ta custom event fire korlam
+            })
+            .catch(() => {
+              Swal.fire("Failed", "There was something wrong", "warning");
+            });
+        }
+      });
+    },
     createUser() {
       //user create start howar shuru tei progress bar start hobe. so createUser() method call holei progress bar start korci
       this.$Progress.start();
-      this.form.post("api/users");
-      //data api diye successfully insert kora hoye gele 1ta toaster diye success msg dekhabo
-      //toaster ta app.js e globally define kora ace. sejonno ei component e just call kore use korte parbo
-      Toast.fire({
-        type: "success",
-        title: "User created successfully"
-      });
+      this.form
+        .post("api/users")
+        .then(() => {
+          //jodi api use kore successfully data tule ante pare then nicher kaj gula korbo.
 
-      //api use kore data insert kora hoye gele progress bar stop hye jabe. so http req er por progress bar finish korci
-      this.$Progress.finish();
+          /*
+                jokhn api call kore user create kora hoye jabe, ami chai page refresh na kore table e new user er data chole ashbe.
+                ejonno custom event use korbo vue js er.
+                Fire.$emit("event_name") etar mane ami 1ta event fire korlam.
+                now je event ta fire korlam ota keu listen korbe.
+                Fire.$on("event_name",function()); etar mane oi event ta fire hole 1ta function execute koro.
+          */
+          Fire.$emit("loadData"); //1ta custom event fire korlam
 
-      //progressbar finish howar por modal ta close kore dibo
-      $("#addNewUserModal").modal("hide");
+          //data api diye successfully insert kora hoye gele 1ta toaster diye success msg dekhabo
+          //toaster ta app.js e globally define kora ace. sejonno ei component e just call kore use korte parbo
+          Toast.fire({
+            type: "success",
+            title: "User created successfully"
+          });
+
+          //api use kore data insert kora hoye gele progress bar stop hye jabe. so http req er por progress bar finish korci
+          this.$Progress.finish();
+
+          //progressbar finish howar por modal ta close kore dibo
+          $("#addNewUserModal").modal("hide");
+        })
+        .catch(() => {
+          //jodi data tule ante na pare tahole eta execute hobe.
+          this.$Progress.fail(); //jodi data tule ante fail kore tahole failed er progress bar dekhabo(red color)
+        });
+    },
+    updateUser() {
+      this.$Progress.start();
+      this.form
+        .put("api/users/" + this.form.id)
+        .then(() => {
+          $("#addNewUserModal").modal("hide");
+          //successfully update data
+          Swal.fire("Updated!", "Your data has been updated.", "success");
+          this.$Progress.finish();
+          Fire.$emit("loadData");
+        })
+        .catch(() => {
+          this.$Progress.fail();
+        });
+    },
+
+    addUserModal() {
+      this.editMode = false; //user add korte chai, edit korte na. tai false kore dicci
+      this.form.reset(); //reset the form before opening so that no data is present in the form
+      $("#addNewUserModal").modal("show");
+    },
+    updateUserModal(user) {
+      this.editMode = true; //update button e click korle editmode true korteci
+      this.form.reset(); //reset the form before opening so that no data is present in the form
+      $("#addNewUserModal").modal("show");
+      this.form.fill(user); //je user ke update korbo tar info gula modal e load kore nilam
     }
   },
 
   created() {
     //ei component ta jokhn create hobe tokhn chai amar sob user load kore niye ashbe.
     this.loadUsers();
+
+    //ami chai 3 second por por user er data gulake fetch kore anbe jate page bar bar reload kora na lage 1ta user create korar por
+    //loadUser() method ta 1bar http request pathay. so etake 3 sec por por call korlei hbe.
+
+    //setInterval(() => this.loadUsers(), 3000);//but eta good practice na. caz 3 sec por por i server e req ditei thakbe.
+    //amar dorkar jokhn user create kora hobe tokhn only http req pathano.
+    //sejonno custom event use korbo. upore emit diye 1ta custom event fire kora ace. now ota listen krbo.
+    Fire.$on("loadData", () => {
+      this.loadUsers(); //jokhn user create hobe tokhni loadUser() call kore new user er data fetch kore anbo.
+      //always ana lagtecena.
+    });
   }
 };
 </script>
