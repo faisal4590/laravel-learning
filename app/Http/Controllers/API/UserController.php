@@ -34,8 +34,13 @@ class UserController extends Controller
      */
     public function index()
     {
-        //Database theke user tule return korbo jate table e pore show korate pari
-        return User::latest()->paginate(10);
+        //ami chai both admin and author 2 type er user er i ei function er upor control thakbe.
+        if(\Gate::allows('isAdmin') || \Gate::allows('isAuthor')){//Gate import na korle direct \Gate use korbo
+            //Database theke user tule return korbo jate table e pore show korate pari
+           return User::latest()->paginate(2);
+           //so now user hishebe login korle localhost/users page e gele user er list dekhte parbona.
+           //only admin and author er jonno ei function accessible hobe
+        }
     }
 
     /**
@@ -185,6 +190,15 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        //only admin user delete korte parbe
+        $this->authorize('isAdmin');
+        /*
+            authorize hocce 1ta helper controller.
+            bole dilam jodi admin hoy tahole destroy() function ta access korte parbe.
+            jodi chai shob function er jonno erokom test korte tahole constructor e ei line ta dye dbo.
+            tahole admin only sob function access korte parbe(add, delete, update, index)..
+        */
+
         //User er data delete korbo. Users model ke ekdom upore import kore nici
 
         //first find the user

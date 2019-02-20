@@ -10,6 +10,9 @@ window.Vue = require("vue");
 import { Form, HasError, AlertError } from "vform";
 import moment from "moment"; //package.json file e moment dependency ace okhane check kortece
 
+import Gate from "./Gate.js"; //Importing Gate.js class for ACL control in front end.
+Vue.prototype.$gate = new Gate(window.user); //$gate ke jate globally jekono jaygay use korte pari tai prototype kore nilam
+
 //importing sweet alert.js starts
 import Swal from "sweetalert2";
 window.Swal = Swal;
@@ -103,6 +106,13 @@ Vue.component(
     "example-component",
     require("./components/ExampleComponent.vue").default
 );
+Vue.component(
+    "not-found",
+    require("./components/NotFoundComponent.vue").default
+);
+
+//importing pagination component
+Vue.component("pagination", require("laravel-vue-pagination")).default; //laravel-vue-pagination ei name ta package.json file er dev-dependency theke check kortece.
 
 //defining global filter jeta jekono component e use korte parbo.. starts
 Vue.filter("upperCaseAnyText", function(textArgument) {
@@ -111,6 +121,9 @@ Vue.filter("upperCaseAnyText", function(textArgument) {
     //as eta global filter hishebe define korci(As app.js e likhci), so jekono vue component e ei filter call korte parbo ekhn.
 });
 
+Vue.filter("parseCreatedAtDateForUser", function(createdAt) {
+    return moment(createdAt).format("MMMM Do YYYY, h:mm:ss a"); //moment.js use korlam.
+});
 Vue.filter("parseCreatedAtDateForUser", function(createdAt) {
     return moment(createdAt).format("MMMM Do YYYY, h:mm:ss a"); //moment.js use korlam.
 });

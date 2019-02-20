@@ -193,7 +193,16 @@ export default {
   },
   methods: {
     getProfilePhoto() {
-      return "img/profile/" + this.form.photo;
+      let photo = "";
+      //instantly update photo without refreshing browser
+      if (this.form.photo.length > 100) {
+        //user jodi new photo upload kore then base64 e convert kore ota. so length onek boro..
+        photo = this.form.photo;
+      } else {
+        //jodi user new photo chose na kore tahole database theke previous image er name ta pacci.
+        photo = "img/profile/" + this.form.photo;
+      }
+      return photo;
     },
     updateProfile() {
       this.$Progress.start();

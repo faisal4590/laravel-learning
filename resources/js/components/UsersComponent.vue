@@ -1,6 +1,7 @@
 <template>
   <div class="container">
-    <div class="row mt-5">
+    <div class="row mt-5" v-if="$gate.isAdminOrIsAuthorFrontEnd()">
+      <!-- only admin ar author ei div dekhte parbe. evabe front end e ACL control korte pari -->
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
@@ -22,7 +23,7 @@
                     <th>Type</th>
                     <th>Registed at</th>
                   </tr>
-                  <tr v-for="userVariable in usersObj" :key="userVariable.id">
+                  <tr v-for="userVariable in usersObj.data" :key="userVariable.id">
                     <td>{{userVariable.id}}</td>
                     <td>{{userVariable.name}}</td>
                     <td>{{userVariable.email}}</td>
@@ -44,9 +45,27 @@
               </table>
             </div>
             <!-- /.card-body -->
+            <!-- card footer -->
+            <div class="card-footer">
+              <!-- card-footer bootstrap er define kora 1ta class -->
+              <pagination :data="usersObj" @pagination-change-page="getResults"></pagination>
+              <!--
+                  :data="usersObj" ei users ta astece script e je usersObj name e object ta define korci otar data
+                  jokhn keu next page e click korbo tokhn pagination-change-page event ta execute hobe. ei event er
+                  function hocce getResult.
+              -->
+            </div>
           </div>
           <!-- /.card -->
         </div>
+      </div>
+    </div>
+
+    <div class="row mt-5" v-if="!$gate.isAdminOrIsAuthorFrontEnd()">
+      <!-- only admin ar author ei div dekhte parbe. evabe front end e ACL control korte pari -->
+      <div class="col-md-12">
+        <h2 class="text-center">Only admin and author is allowed to access this page</h2>
+        <not-found></not-found>
       </div>
     </div>
 
@@ -184,10 +203,13 @@ export default {
   },
   methods: {
     loadUsers() {
-      //using axios to send an HTTP request(get request) to our API(UserController.php) to fetch data from index() function
-      axios.get("api/users").then(({ data }) => (this.usersObj = data.data));
-      //user api theke sob data tule ene then data gulake userObj object e store korlam
-      //get request dile automatic API/UserController.php er index() method ke call korbe. Okhan theke data return koracci
+      //jodi admin hoy taholei only user er info fetch kore anbe api diye
+      if (this.$gate.isAdminOrIsAuthorFrontEnd()) {
+        //using axios to send an HTTP request(get request) to our API(UserController.php) to fetch data from index() function
+        axios.get("api/users").then(({ data }) => (this.usersObj = data));
+        //user api theke sob data tule ene then data gulake userObj object e store korlam
+        //get request dile automatic API/UserController.php er index() method ke call korbe. Okhan theke data return koracci
+      }
     },
     deleteUser(id) {
       //delete korar age 1ta confirmation message dewa lagbe
@@ -281,6 +303,13 @@ export default {
       this.form.reset(); //reset the form before opening so that no data is present in the form
       $("#addNewUserModal").modal("show");
       this.form.fill(user); //je user ke update korbo tar info gula modal e load kore nilam
+    },
+    getResults(page = 1) {
+      //initially 1st page er data anbo.
+      //method for fetching data for pagination after pagination-change-page event fires
+      axios.get("api/users?page=" + page).then(response => {
+        this.usersObj = response.data; //jokhn next page e click korbo tokhn next page er data usersObj e store korbe
+      });
     }
   },
 
