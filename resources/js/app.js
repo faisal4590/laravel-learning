@@ -82,6 +82,10 @@ let routes = [
     {
         path: "/users",
         component: require("./components/UsersComponent.vue").default
+    },
+    {
+        path: "*", //anything we put in the url beside the above mentioned paths, it should give a 404 error
+        component: require("./components/NotFoundComponent.vue").default
     }
 ];
 
