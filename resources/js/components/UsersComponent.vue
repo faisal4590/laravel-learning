@@ -327,6 +327,25 @@ export default {
       this.loadUsers(); //jokhn user create hobe tokhni loadUser() call kore new user er data fetch kore anbo.
       //always ana lagtecena.
     });
+
+    //code for search starts here
+
+    //app.js e 1ta global event fire korci jokhn user kono kisu search kore enter dibe.
+    //now oi event ta listen korbo ekhane
+    Fire.$on("searchEvent", () => {
+      let query = this.$parent.search;
+      //user search bar e ja type korbe ota app.js er search var e store hobe. otake amar ei component e access korbo
+      //kivabe? etar jonno $parent use korlam.
+
+      //send a http request
+      axios
+        .get("api/findUser?q=" + query)
+        .then(data => {
+          //if request is successful, then it should contain all the user data thats why I passed data as parameter
+          this.usersObj = data.data; //developer tools er vue te gele dekhte parbo data er moddhe data te user er info ace.
+        })
+        .catch(() => {});
+    });
   }
 };
 </script>

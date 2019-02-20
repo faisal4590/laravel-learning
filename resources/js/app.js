@@ -160,5 +160,14 @@ Vue.component(
 
 const app = new Vue({
     el: "#app",
-    router
+    router,
+    data: {
+        search: ""
+    },
+    methods: {
+        searchUser() {
+            //user ke jekono component theke search korbe. tai root element e declare korci method ta
+            Fire.$emit("searchEvent");
+        }
+    }
 });

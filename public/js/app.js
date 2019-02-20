@@ -2501,6 +2501,19 @@ __webpack_require__.r(__webpack_exports__);
       _this6.loadUsers(); //jokhn user create hobe tokhni loadUser() call kore new user er data fetch kore anbo.
       //always ana lagtecena.
 
+    }); //code for search starts here
+    //app.js e 1ta global event fire korci jokhn user kono kisu search kore enter dibe.
+    //now oi event ta listen korbo ekhane
+
+    Fire.$on("searchEvent", function () {
+      var query = _this6.$parent.search; //user search bar e ja type korbe ota app.js er search var e store hobe. otake amar ei component e access korbo
+      //kivabe? etar jonno $parent use korlam.
+      //send a http request
+
+      axios.get("api/findUser?q=" + query).then(function (data) {
+        //if request is successful, then it should contain all the user data thats why I passed data as parameter
+        _this6.usersObj = data.data; //developer tools er vue te gele dekhte parbo data er moddhe data te user er info ace.
+      }).catch(function () {});
     });
   }
 });
@@ -79116,7 +79129,16 @@ Vue.component("passport-personal-access-tokens", __webpack_require__(/*! ./compo
 
 var app = new Vue({
   el: "#app",
-  router: router
+  router: router,
+  data: {
+    search: ""
+  },
+  methods: {
+    searchUser: function searchUser() {
+      //user ke jekono component theke search korbe. tai root element e declare korci method ta
+      Fire.$emit("searchEvent");
+    }
+  }
 });
 
 /***/ }),

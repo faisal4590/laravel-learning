@@ -23,3 +23,5 @@ Route::get('profile','API\UserController@profile');//keu jokhn user er profile p
 //tokhon ami je UserController.php API ta create korcilam otar profile() method ta execute kore profile er info fetch kore anbe.
 
 Route::put('profile','API\UserController@updateProfile');
+
+Route::get('findUser','API\UserController@search');
