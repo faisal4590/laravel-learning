@@ -32,7 +32,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- SEARCH FORM -->
     <div class="input-group input-group-sm">
     <input class="form-control form-control-navbar"
-    v-model="search" @keyup.enter="searchUser"
+    v-model="search" @keyup="searchUser"
     type="search" placeholder="Search" aria-label="Search">
     {{-- @keyup.enter mane keu jokhn enter dibe tokhn searchUser method ta execute korbo --}}
     <div class="input-group-append">

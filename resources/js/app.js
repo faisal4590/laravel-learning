@@ -165,9 +165,12 @@ const app = new Vue({
         search: ""
     },
     methods: {
-        searchUser() {
+        searchUser: _.debounce(() => {
             //user ke jekono component theke search korbe. tai root element e declare korci method ta
             Fire.$emit("searchEvent");
-        }
+
+            //loadash library use kore live search korbo. ei library er 1ta method hocce _.debounce()
+            //proti 0.3 sec por por http req pathabo jate user je key press kore setar data instantly tule ante pare
+        }, 300)
     }
 });
